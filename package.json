@@ -14,19 +14,20 @@
   "scripts": {
     "lint": "eslint \"./**/*.{ts,js}\"",
     "build-tests": "esbuild test/index.ts --target=es2020 --bundle --keep-names > test/test-bundle.js",
-    "test": "npm run lint && npm run build && npm run build-tests && npm run test-tape-run",
-    "test-tape-run": "cat test/index.html | tape-run --input=html --static=test | tap-arc",
-    "build-cjs": "esbuild src/*.ts --format=cjs --tsconfig=tsconfig.build.json --keep-names --outdir=./dist --out-extension:.js=.cjs",
-    "build": "mkdir -p ./dist && rm -rf ./dist/* && npm run build-cjs && tsc --project tsconfig.build.json",
+    "test": "npm run lint && npm run build",
+    "build-cjs": "esbuild src/*.ts --format=cjs --tsconfig=tsconfig.build.json --keep-names --outdir=./dist --out-extension:.js=.cjs --sourcemap=inline",
+    "build-esm": "esbuild src/*.ts --format=esm --tsconfig=tsconfig.build.json --keep-names --outdir=./dist --sourcemap=inline",
+    "build": "mkdir -p ./dist && rm -rf ./dist/* && npm run build-cjs && npm run build-esm && npm run build:min",
+    "build-cjs:min": "esbuild src/*.ts --minify --format=cjs --tsconfig=tsconfig.build.json --keep-names --outdir=./dist --out-extension:.js=.min.cjs",
+    "build-esm:min": "esbuild src/*.ts --minify --format=esm --tsconfig=tsconfig.build.json --keep-names --outdir=./dist --out-extension:.js=.min.js",
+    "build:min": "npm run build-cjs:min && npm run build-esm:min",
     "start": "vite",
     "preversion": "npm run lint",
     "version": "auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md",
     "postversion": "git push --follow-tags && npm publish",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "@nichoth/events": "^3.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@bicycle-codes/tapzero": "^0.9.2",
     "@nichoth/debug": "^0.6.5",
@@ -46,6 +47,14 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./min/*": {
+      "import": [
+        "./dist/*.min.js"
+      ],
+      "require": [
+        "./dist/*.min.cjs"
+      ]
     },
     "./*": {
       "import": [

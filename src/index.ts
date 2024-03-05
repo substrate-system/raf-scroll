@@ -1,60 +1,29 @@
-import { Bus } from '@nichoth/events'
-const emitter = new Bus()
-
-let rafId = -1
-let scrollY = 0
-let deltaY = 0
+let lastKnownScrollPosition = 0
 let ticking = false
 
-const raf = window.requestAnimationFrame
+interface Unsubscribe {
+    ():void
+}
 
-export const rafScroll = {
-    add: function (fn) {
-        const off = emitter.on('scroll', fn)
+export const rafScroll = function rafScroll (
+    cb:(scrollY:number)=>any
+):Unsubscribe {
+    document.addEventListener('scroll', onScroll)
 
-        // Start raf on first callback
-        rafId = raf(update)
+    function onScroll () {
+        lastKnownScrollPosition = window.scrollY
 
-        return () => {
-            off()
-            window.cancelAnimationFrame(rafId)
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                cb(lastKnownScrollPosition)
+                ticking = false
+            })
+
+            ticking = true
         }
-    },
-
-    addOnce: function (fn) {
-        const off = emitter.on('scroll', (ev) => {
-            fn(ev)
-            off()
-        })
-
-        // Start raf on first callback
-        rafId = raf(update)
-    },
-
-    getCurrent: function () {
-        return getEvent()
-    }
-}
-
-function getEvent () {
-    const scroll = document.documentElement.scrollTop
-
-    if (ticking) {
-        deltaY = scroll - scrollY
     }
 
-    scrollY = scroll
-
-    return {
-        scrollY,
-        deltaY
+    return function Unsubscribe () {
+        document.removeEventListener('scroll', onScroll)
     }
-}
-
-function update () {
-    rafId = raf(update)
-
-    ticking = true
-    emitter.emit('scroll', getEvent())
-    ticking = false
 }

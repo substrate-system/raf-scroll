@@ -1,5 +1,10 @@
 {
-  "private": true,
+  "name": "@bicycle-codes/raf-scroll",
+  "description": "Scroll events, debounced with `requestAnimationFrame`",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
   "type": "module",
   "version": "0.0.0",
   "main": "dist/index.js",
@@ -54,5 +59,20 @@
     }
   },
   "author": "nichoth <nichoth@gmail.com> (https://nichoth.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bicycle-codes/raf-scroll.git"
+  },
+  "keywords": [
+    "request",
+    "animation",
+    "from",
+    "scroll",
+    "raf"
+  ],
+  "bugs": {
+    "url": "https://github.com/bicycle-codes/raf-scroll/issues"
+  },
+  "homepage": "https://github.com/bicycle-codes/raf-scroll#readme"
 }

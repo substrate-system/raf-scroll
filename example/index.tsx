@@ -1,10 +1,6 @@
-import { render } from 'preact'
-import { example } from '../src/index.js'
+import { rafScroll } from '../src/index.js'
+import './style.css'
 
-example()
-
-function Example () {
-    return (<div>hello</div>)
-}
-
-render((<Example />), document.getElementById('root')!)
+rafScroll.add(ev => {
+    console.log('scroll event', ev)
+})

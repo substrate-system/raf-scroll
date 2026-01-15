@@ -10,7 +10,17 @@
 Scroll events, debounced with `requestAnimationFrame`.
 
 <details><summary><h2>Contents</h2></summary>
+
 <!-- toc -->
+
+- [Install](#install)
+- [Example](#example)
+- [Modules](#modules)
+  * [Bundler](#bundler)
+  * [Minified](#minified)
+
+<!-- tocstop -->
+
 </details>
 
 ## Install
@@ -23,9 +33,10 @@ npm i -S @substrate-system/raf-scroll
 ```js
 import { rafScroll } from '@substrate-system/raf-scroll'
 
-rafScroll(ev => {
+rafScroll((ev:number) => {
     // this is called at most once per animation frame
-    console.log('scroll event', ev)
+    // `ev` is just the Y scroll position (window.scrollY)
+    console.log('scroll Y', ev)
 })
 ```
 
